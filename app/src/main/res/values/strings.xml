@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">鱼饼天气</string>
     <string name="loading_tips">正在加载数据...</string>
+    <string name="action_setting">设置</string>
+    <string name="action_exit">退出</string>
+    <string name="action_cityChange">添加/删除城市</string>
+
 </resources>

@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item android:title="@string/action_cityChange"
+        android:id="@+id/action_changeCity"
+        />
+   <item android:title="@string/action_setting"
+          android:id="@+id/action_setting"
+       />
+    <item android:title="@string/action_exit"
+        android:id="@+id/action_exit"
+        />
 </menu>
