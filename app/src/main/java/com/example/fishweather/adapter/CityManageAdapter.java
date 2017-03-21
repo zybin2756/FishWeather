@@ -30,6 +30,7 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
 
     public void setModify(boolean modify) {
         isModify = modify;
+        notifyDataSetChanged();
     }
 
     @Override

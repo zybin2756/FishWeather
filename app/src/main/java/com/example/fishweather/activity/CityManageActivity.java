@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.example.fishweather.DividerItemDecoration;
 import com.example.fishweather.R;
 import com.example.fishweather.adapter.CityManageAdapter;
 
@@ -59,6 +60,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
         city_recyclerView.setAdapter(cityManageAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         city_recyclerView.setLayoutManager(layoutManager);
+        city_recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
 
         ll_add_city = (LinearLayout) findViewById(R.id.ll_add_city);
         action_edit = (Button) toolbar.findViewById(R.id.action_edit);
@@ -83,8 +85,16 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.action_edit:
+                cityManageAdapter.setModify(true);
+                actionBar.setDisplayHomeAsUpEnabled(false);
+                action_cancel.setVisibility(View.VISIBLE);
+                ll_add_city.setVisibility(View.GONE);
                 break;
             case R.id.action_cancel:
+                cityManageAdapter.setModify(false);
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                action_cancel.setVisibility(View.GONE);
+                ll_add_city.setVisibility(View.VISIBLE);
                 break;
         }
     }
