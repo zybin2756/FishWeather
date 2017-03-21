@@ -65,8 +65,7 @@ public class SplashActivity extends Activity {
                     break;
                 case Constants.LOAD_CITY_INFO_FINISH:
                     progressBar.setVisibility(View.GONE);
-                    Intent intent = new Intent(SplashActivity.this,WeatherInfosActivity.class);
-                    startActivity(intent);
+                    WeatherInfosActivity.actionStart(SplashActivity.this);
                     finish();
                     break;
             }

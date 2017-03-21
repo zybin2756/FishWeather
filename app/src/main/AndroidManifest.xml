@@ -17,6 +17,9 @@
         <activity android:name="com.example.fishweather.activity.WeatherInfosActivity">
 
         </activity>
+        <activity android:name=".activity.CityManageActivity">
+
+        </activity>
     </application>
 
 </manifest>
