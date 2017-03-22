@@ -1,4 +1,4 @@
-package com.example.fishweather;
+package com.example.fishweather.itemTouch;
 
 import android.content.Context;
 import android.content.res.TypedArray;

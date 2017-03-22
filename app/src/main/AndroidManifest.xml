@@ -20,6 +20,9 @@
         <activity android:name=".activity.CityManageActivity">
 
         </activity>
+        <activity android:name=".activity.CitySearchActivity">
+
+        </activity>
     </application>
 
 </manifest>

@@ -1,27 +1,34 @@
 package com.example.fishweather.adapter;
 
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fishweather.R;
+import com.example.fishweather.itemTouch.OnStartDragListener;
+import com.example.fishweather.itemTouch.myItemTouchHelperCallback;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Administrator on 2017/3/21 0021.
  */
 
-public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.ViewHolder> {
+public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.ViewHolder> implements myItemTouchHelperCallback.ItemTouchHeplerAdapter{
 
     private List<String> cityList;
     private boolean isModify;
-    public CityManageAdapter(List<String> cityList) {
+    private OnStartDragListener listener;
+    public CityManageAdapter(List<String> cityList,OnStartDragListener listener) {
         this.cityList = cityList;
         this.isModify = false;
+        this.listener = listener;
     }
 
     public boolean isModify() {
@@ -33,11 +40,33 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         notifyDataSetChanged();
     }
 
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_city_manage,parent,false);
-        ViewHolder viewHolder = new ViewHolder(view);
+
+        final ViewHolder viewHolder = new ViewHolder(view);
+
+        viewHolder.action_remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = viewHolder.getAdapterPosition();
+                cityList.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
+        viewHolder.action_move.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN){
+                    listener.onStartDrag(viewHolder);
+                }
+                return false;
+            }
+        });
+
         return viewHolder;
     }
 
@@ -59,11 +88,34 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
         return cityList.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder{
+    @Override
+    public boolean onItemMove(int from, int to) {
+        Collections.swap(cityList, from, to);
+        notifyItemMoved(from, to);
+        return false;
+    }
+
+    @Override
+    public void onItemRemove(int position) {
+        cityList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    @Override
+    public boolean isCanMove() {
+        return isModify;
+    }
+
+    @Override
+    public boolean isCanRemove() {
+        return isModify;
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView item_city_name;
         ImageView action_remove;
         ImageView action_move;
-        public ViewHolder(View itemView) {
+        public ViewHolder(final View itemView) {
             super(itemView);
             item_city_name = (TextView) itemView.findViewById(R.id.item_city_name);
             action_remove = (ImageView) itemView.findViewById(R.id.action_remove);
