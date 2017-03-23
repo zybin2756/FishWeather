@@ -139,7 +139,8 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
         switch (requestCode) {
             case Constants.SEARCH_CITY: {
                 if (Constants.SEARCH_CITY_ADD == resultCode) {
-                    refreshDta();
+                    setResult(Constants.MANAGE_CITY_REFRESH);
+                    finish();
                 } else if (Constants.SEARCH_CITY_UNADD == resultCode) {
 
                 }
