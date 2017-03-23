@@ -2,6 +2,7 @@ package com.example.fishweather.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
+import com.example.fishweather.db.UserCity;
+import com.example.fishweather.db.dbManage;
 import com.example.fishweather.itemTouch.DividerItemDecoration;
 import com.example.fishweather.R;
 import com.example.fishweather.adapter.CityManageAdapter;
@@ -24,6 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.fishweather.itemTouch.OnStartDragListener;
+import com.example.fishweather.util.Constants;
+
+import org.litepal.crud.DataSupport;
+import org.litepal.tablemanager.Connector;
 
 /**
  * Created by Administrator on 2017/3/21 0021.
@@ -43,6 +50,8 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView city_recyclerView;
     private CityManageAdapter cityManageAdapter;
     private ItemTouchHelper itemTouchHelper;
+
+    private List<UserCity> cityList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,17 +61,18 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initRecyclerView(){
-        List<String> cityList = new ArrayList<String>();
-        for(int i = 0 ; i< 10; i++){
-            cityList.add("广州"+i);
-        }
+        cityList = new ArrayList<>();
+        refreshDta();
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
         cityManageAdapter = new CityManageAdapter(cityList,this);
         city_recyclerView = (RecyclerView) findViewById(R.id.city_recyclerView);
         city_recyclerView.setAdapter(cityManageAdapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         city_recyclerView.setLayoutManager(layoutManager);
         city_recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+
         if(itemTouchHelper != null){
             itemTouchHelper.attachToRecyclerView(null);
         }
@@ -109,16 +119,38 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
                 if(!cityManageAdapter.isModify()) {
                     enterModify(true);
                 }else{
-
+                    dbManage.saveUserCity(cityList);
+                    enterModify(false);
                 }
                 break;
             case R.id.action_cancel:
                 enterModify(false);
+                refreshDta();
                 break;
             case R.id.btn_add_city:
-                CitySearchActivity.actionStart(this);
+                Intent intent = new Intent(this,CitySearchActivity.class);
+                startActivityForResult(intent, Constants.SEARCH_CITY);
                 break;
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Constants.SEARCH_CITY: {
+                if (Constants.SEARCH_CITY_ADD == resultCode) {
+                    refreshDta();
+                } else if (Constants.SEARCH_CITY_UNADD == resultCode) {
+
+                }
+                break;
+            }
+        }
+    }
+
+    private void refreshDta(){
+        cityList.clear();
+        cityList.addAll(dbManage.loadUserCity());
     }
 
     public void enterModify(boolean modify){
@@ -128,7 +160,6 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
             action_cancel.setVisibility(View.VISIBLE);
             ll_add_city.setVisibility(View.GONE);
             action_edit.setText("确定");
-
         }else{
             cityManageAdapter.setModify(false);
             actionBar.setDisplayHomeAsUpEnabled(true);

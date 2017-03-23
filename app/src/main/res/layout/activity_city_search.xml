@@ -12,9 +12,20 @@
         app:contentInsetStart="0dp"
         app:contentInsetLeft="0dp">
         <EditText
-            android:background="#fff"
+            android:id="@+id/edt_search"
+            android:background="@drawable/btn_corner"
             android:layout_margin="10dp"
+            android:drawablePadding="20dp"
+            android:hint="请输入城市名"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </android.support.v7.widget.Toolbar>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_recyclerView"
+        android:layout_below="@id/search_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

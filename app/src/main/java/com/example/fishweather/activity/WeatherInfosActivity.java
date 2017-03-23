@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.fishweather.R;
+import com.example.fishweather.util.Constants;
 
 /**
  * Created by Administrator on 2017/3/20 0020.
@@ -48,7 +49,8 @@ public class WeatherInfosActivity extends AppCompatActivity {
                 Toast.makeText(this, "我准备用来显示城市列表的", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_changeCity:
-                CityManageActivity.actionStart(this);
+                Intent intent = new Intent(this,CityManageActivity.class);
+                startActivityForResult(intent, Constants.MANAGE_CITY);
                 break;
             case R.id.action_setting:
                 break;
@@ -57,5 +59,17 @@ public class WeatherInfosActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case Constants.MANAGE_CITY: {
+                if (Constants.MANAGE_CITY_REFRESH == resultCode) {
+                    
+                }
+                break;
+            }
+        }
     }
 }

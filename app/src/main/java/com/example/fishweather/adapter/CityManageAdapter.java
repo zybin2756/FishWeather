@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.fishweather.R;
+import com.example.fishweather.db.UserCity;
 import com.example.fishweather.itemTouch.OnStartDragListener;
 import com.example.fishweather.itemTouch.myItemTouchHelperCallback;
 
@@ -22,10 +23,10 @@ import java.util.List;
 
 public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.ViewHolder> implements myItemTouchHelperCallback.ItemTouchHeplerAdapter{
 
-    private List<String> cityList;
+    private List<UserCity> cityList;
     private boolean isModify;
     private OnStartDragListener listener;
-    public CityManageAdapter(List<String> cityList,OnStartDragListener listener) {
+    public CityManageAdapter(List<UserCity> cityList,OnStartDragListener listener) {
         this.cityList = cityList;
         this.isModify = false;
         this.listener = listener;
@@ -72,7 +73,7 @@ public class CityManageAdapter extends RecyclerView.Adapter<CityManageAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        String cityName = cityList.get(position);
+        String cityName = cityList.get(position).getCity_name();
         if(isModify){
             holder.action_remove.setVisibility(View.VISIBLE);
             holder.action_move.setVisibility(View.VISIBLE);
