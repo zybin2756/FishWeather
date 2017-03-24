@@ -1,5 +1,9 @@
 package com.example.fishweather.util;
 
+import android.widget.Toast;
+
+import com.example.fishweather.FishApplication;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -37,5 +41,21 @@ public class HttpUtil {
     public interface HttpCallBack{
         public void onError(String msg);
         public void onFinish(String data);
+    }
+
+    public void loadWeatherInfo(String cityCode){
+        String path = "https://free-api.heweather.com/v5/weather?city="+cityCode+"&&key=65c50b6d014c4de3adf356741cbdd7d4";
+        HttpUtil.sendOkHttpRequest(path, new HttpUtil.HttpCallBack() {
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(FishApplication.getContext(),"加载天气信息失败",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFinish(String data) {
+                ParseUtil.parseWeather(data);
+            }
+
+        });
     }
 }
