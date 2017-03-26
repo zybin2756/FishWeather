@@ -43,7 +43,7 @@ public class HttpUtil {
         public void onFinish(String data);
     }
 
-    public void loadWeatherInfo(String cityCode){
+    public static void  loadWeatherInfo(String cityCode){
         String path = "https://free-api.heweather.com/v5/weather?city="+cityCode+"&&key=65c50b6d014c4de3adf356741cbdd7d4";
         HttpUtil.sendOkHttpRequest(path, new HttpUtil.HttpCallBack() {
             @Override

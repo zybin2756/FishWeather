@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fishweather.R;
@@ -41,7 +43,13 @@ public class WeatherFragment extends Fragment{
     }
 
     private String cityCode;
-    
+    private RelativeLayout now_weather;
+    private TextView now_tmp;
+    private TextView now_city_and_code;
+    private TextView now_dir;
+    private TextView now_spd;
+    private TextView now_hum;
+    private TextView now_qlty;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,13 +57,22 @@ public class WeatherFragment extends Fragment{
         Bundle args = getArguments();
         this.cityCode = args.getString("cityCode");
 
-
-//        SharedPreferences sp = getActivity().getSharedPreferences(cityCode,Context.MODE_PRIVATE);
-//        sp.getString("tmp",null);
-//        sp.getString("hum",null);
-//        sp.getString("dir",null);
-//        sp.getString("spd",null);
-//        sp.getString("qlty",null);
+        HttpUtil.loadWeatherInfo(this.cityCode);
+        now_weather = (RelativeLayout) view.findViewById(R.id.now_weather);
+        now_weather.getBackground().setAlpha(180);
+        now_tmp = (TextView) now_weather.findViewById(R.id.now_temp);
+        now_city_and_code = (TextView) now_weather.findViewById(R.id.now_city_and_code);
+        now_dir = (TextView) now_weather.findViewById(R.id.now_dir);
+        now_spd = (TextView) now_weather.findViewById(R.id.now_spd);
+        now_hum = (TextView) now_weather.findViewById(R.id.now_hum);
+        now_qlty = (TextView) now_weather.findViewById(R.id.now_qlty);
+        SharedPreferences sp = getActivity().getSharedPreferences(cityCode,Context.MODE_PRIVATE);
+        now_tmp.setText(sp.getString("tmp","未获取"));
+        now_city_and_code.setText(sp.getString("city","未获取"));
+        now_dir.setText(sp.getString("dir","未获取"));
+        now_spd.setText(sp.getString("spd","未获取"));
+        now_hum.setText(sp.getString("hum","未获取"));
+        now_qlty.setText(sp.getString("qai","未获取"));
 //        sp.getString("o3",null);
 //        sp.getString("aqi",null);
 //        sp.getString("city",null);
