@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.example.fishweather.FishApplication;
 import com.example.fishweather.R;
 import com.example.fishweather.adapter.WeatherDailyViewAdapter;
+import com.example.fishweather.adapter.WeatherSuggestionViewAdapter;
 import com.example.fishweather.db.UserCity;
 import com.example.fishweather.db.dbManage;
 import com.example.fishweather.itemTouch.DividerItemDecoration;
@@ -32,6 +33,7 @@ import com.example.fishweather.util.DailyForecastModel;
 import com.example.fishweather.util.HttpUtil;
 import com.example.fishweather.util.ParseUtil;
 import com.example.fishweather.util.SuggestionModel;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -67,9 +69,10 @@ public class WeatherFragment extends Fragment{
     private TextView now_hum;
     private TextView now_qlty;
 
-    private WeatherDailyViewAdapter adapter;
+    private WeatherSuggestionViewAdapter suggestionViewAdapter;
+    private RecyclerView suggestion_view;
+    private WeatherDailyViewAdapter dailyViewAdapteradapter;
     private RecyclerView daily_view;
-    private NestedScrollView scrollView;
     private SwipeRefreshLayout weatherinfo_swip;
     @Nullable
     @Override
@@ -86,14 +89,7 @@ public class WeatherFragment extends Fragment{
 //        sp.getString("aqi",null);
 //        sp.getString("city",null);
 //        sp.getString("update",null);
-//        SuggestionModel drsg = (SuggestionModel) ParseUtil.parseModel(sp.getString("drsg",null));
-//        SuggestionModel comf = (SuggestionModel) ParseUtil.parseModel(sp.getString("comf",null));
-//        SuggestionModel uv = (SuggestionModel) ParseUtil.parseModel(sp.getString("uv",null));
-//        SuggestionModel flu = (SuggestionModel) ParseUtil.parseModel(sp.getString("flu",null));
-//        SuggestionModel trav = (SuggestionModel) ParseUtil.parseModel(sp.getString("trav",null));
-//        SuggestionModel sport = (SuggestionModel) ParseUtil.parseModel(sp.getString("sport",null));
-//        SuggestionModel cw = (SuggestionModel) ParseUtil.parseModel(sp.getString("cw",null));
-//        SuggestionModel air = (SuggestionModel) ParseUtil.parseModel(sp.getString("air",null));
+
 
 
         return view;
@@ -132,19 +128,18 @@ public class WeatherFragment extends Fragment{
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
         daily_view = (RecyclerView) view.findViewById(R.id.daily_view);
         daily_view.setLayoutManager(layoutManager);
-        adapter = new WeatherDailyViewAdapter();
-        daily_view.setAdapter(adapter);
+        dailyViewAdapteradapter = new WeatherDailyViewAdapter();
+        daily_view.setAdapter(dailyViewAdapteradapter);
+
+        LinearLayoutManager slayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        suggestion_view = (RecyclerView) view.findViewById(R.id.suggestion_view);
+        suggestion_view.setLayoutManager(slayoutManager);
+        suggestionViewAdapter = new WeatherSuggestionViewAdapter();
+        suggestion_view.setAdapter(suggestionViewAdapter);
+
     }
 
-    public boolean isDayOrNight(){
-        SimpleDateFormat sdf = new SimpleDateFormat("HH");
-        String hour = sdf.format(new Date());
-        int tmp = Integer.parseInt(hour);
-        if(tmp > 6 && tmp < 18){
-            return true;
-        }
-        return false;
-    }
+
 
     public void loadWeatherInfoFromSp(){
         SharedPreferences sp = getActivity().getSharedPreferences(cityCode,Context.MODE_PRIVATE);
@@ -154,6 +149,10 @@ public class WeatherFragment extends Fragment{
         now_spd.setText(sp.getString("spd","未获取")+"m/s");
         now_hum.setText(sp.getString("hum","未获取")+"%");
         now_qlty.setText(sp.getString("aqi","未获取"));
+
+        String code = "p"+sp.getString("code","100");
+        int resId = getResources().getIdentifier(code,"mipmap",getContext().getPackageName());
+        now_weather.setBackgroundResource(resId);
 
         DailyForecastModel day0 = (DailyForecastModel) ParseUtil.parseModel(sp.getString("day0",null));
         day0.setDay("今天");
@@ -167,7 +166,27 @@ public class WeatherFragment extends Fragment{
         list.add(day1);
         list.add(day2);
 
-        adapter.setList(list);
+        dailyViewAdapteradapter.setList(list);
+
+        List<SuggestionModel> slist = new ArrayList<>();
+        SuggestionModel drsg = (SuggestionModel) ParseUtil.parseModel(sp.getString("drsg",null));
+        SuggestionModel comf = (SuggestionModel) ParseUtil.parseModel(sp.getString("comf",null));
+        SuggestionModel uv = (SuggestionModel) ParseUtil.parseModel(sp.getString("uv",null));
+        SuggestionModel flu = (SuggestionModel) ParseUtil.parseModel(sp.getString("flu",null));
+        SuggestionModel trav = (SuggestionModel) ParseUtil.parseModel(sp.getString("trav",null));
+        SuggestionModel sport = (SuggestionModel) ParseUtil.parseModel(sp.getString("sport",null));
+        SuggestionModel cw = (SuggestionModel) ParseUtil.parseModel(sp.getString("cw",null));
+        SuggestionModel air = (SuggestionModel) ParseUtil.parseModel(sp.getString("air",null));
+
+        slist.add(drsg);
+        slist.add(comf);
+        slist.add(uv);
+        slist.add(flu);
+        slist.add(trav);
+        slist.add(sport);
+        slist.add(cw);
+        slist.add(air);
+        suggestionViewAdapter.setList(slist);
     };
 
     Handler handler = new Handler(){
@@ -181,4 +200,12 @@ public class WeatherFragment extends Fragment{
             }
         }
     };
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        FishApplication.fixInputMethodManagerLeak(getContext());
+        RefWatcher watcher = FishApplication.getRefWatcher();
+        watcher.watch(this);
+    }
 }

@@ -87,37 +87,37 @@ public class ParseUtil {
             SharedPreferences.Editor editor = sp.edit();
 
             SuggestionModel model = null;
-            //穿衣指数
+            //pcloth
             JSONObject jsonObject = object.getJSONObject("drsg");
-            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"));
+            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"),"穿衣指数","pcloth");
             editor.putString("drsg",encodeObject(model));
             //舒适度指数
             jsonObject = object.getJSONObject("comf");
-            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"));
+            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"),"舒适度指数","pcomfortable");
             editor.putString("comf",encodeObject(model));
-            //紫外线指数
+            //prays
             jsonObject = object.getJSONObject("uv");
-            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"));
+            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"),"紫外线指数","prays");
             editor.putString("uv",encodeObject(model));
-            //感冒指数
+            //pcoach
             jsonObject = object.getJSONObject("flu");
-            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"));
+            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"),"感冒指数","pcoach");
             editor.putString("flu",encodeObject(model));
-            //旅游指数
+            //ptravel
             jsonObject = object.getJSONObject("trav");
-            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"));
+            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"),"旅游指数","ptravel");
             editor.putString("trav",encodeObject(model));
-            //运动指数
+            //psport
             jsonObject = object.getJSONObject("sport");
-            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"));
+            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"),"运动指数","psport");
             editor.putString("sport",encodeObject(model));
-            //洗车指数
+            //pwashCar
             jsonObject = object.getJSONObject("cw");
-            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"));
+            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"),"洗车指数","pwashcar");
             editor.putString("cw",encodeObject(model));
-            //空气指数
+            //pair
             jsonObject = object.getJSONObject("air");
-            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"));
+            model = new SuggestionModel(jsonObject.getString("brf"),jsonObject.getString("txt"),"空气指数","pair");
             editor.putString("air",encodeObject(model));
             editor.commit();
         } catch (JSONException e) {

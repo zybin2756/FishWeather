@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.fishweather.FishApplication;
 import com.example.fishweather.R;
 import com.example.fishweather.util.DailyForecastModel;
+import com.example.fishweather.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,16 @@ public class WeatherDailyViewAdapter extends RecyclerView.Adapter<WeatherDailyVi
         String min = model.getMin();
 
         holder.daily_temp.setText(max+"°/"+min+"°");
+
+        String code = "p100";
+        if(Utils.isDayOrNight()) {
+            code = "p" + model.getCode_d();
+        }else{
+            code = "p" + model.getCode_n();
+        }
+
+        int id = FishApplication.getContext().getResources().getIdentifier(code,"mipmap",FishApplication.getContext().getPackageName());
+        holder.daily_icon.setImageResource(id);
     }
 
     @Override

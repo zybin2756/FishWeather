@@ -120,6 +120,17 @@
                             android:layout_height="wrap_content">
 
                         </android.support.v7.widget.RecyclerView>
+
+                        <TextView
+                            android:text="生活指数"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/suggestion_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </android.support.v7.widget.RecyclerView>
                 </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 </android.support.v4.widget.SwipeRefreshLayout>

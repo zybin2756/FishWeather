@@ -9,11 +9,31 @@ import java.io.Serializable;
 public class SuggestionModel implements Serializable{
     String brf;
     String txt;
+    String title;
+    String code;
 
-    public SuggestionModel( String brf, String txt) {
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public SuggestionModel(String brf, String txt, String title,String code) {
         super();
         this.setBrf(brf);
         this.setTxt(txt);
+        this.setCode(code);
+        this.setTitle(title);
     }
 
     public String getBrf() {
