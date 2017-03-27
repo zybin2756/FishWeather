@@ -56,6 +56,15 @@ public class dbManage {
     public static List<UserCity> loadUserCity(){
         return DataSupport.order("city_index asc").find(UserCity.class);
     }
+
+    public static UserCity loadUserCity(String city_code){
+        List<UserCity> cityList = DataSupport.where("city_code = ?",city_code).find(UserCity.class);
+        if(cityList.size() > 0){
+            return  cityList.get(0);
+        }
+        return null;
+    }
+
     public static boolean copyDataBase() {
         File dir = new File(Constants.DATABASE_PATH);
         if (!dir.exists()) {

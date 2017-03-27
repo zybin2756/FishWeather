@@ -10,6 +10,7 @@ public class UserCity extends DataSupport{
     private int id;
     private String city_code;
     private String city_name;
+    private long updateTime;
     private int city_index;
 
     public int getCity_index() {
@@ -42,5 +43,13 @@ public class UserCity extends DataSupport{
 
     public void setCity_name(String city_name) {
         this.city_name = city_name;
+    }
+
+    public long getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(long updateTime) {
+        this.updateTime = updateTime;
     }
 }

@@ -16,7 +16,7 @@
             android:background="@drawable/btn_corner"
             android:layout_margin="10dp"
             android:drawablePadding="20dp"
-            android:hint="请输入城市名"
+            android:hint="@string/search_hint"
             android:inputType="text"
             android:imeOptions="actionSearch"
             android:layout_width="match_parent"

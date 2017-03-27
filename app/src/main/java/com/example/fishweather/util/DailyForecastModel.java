@@ -13,6 +13,15 @@ public class DailyForecastModel implements Serializable{
     String code_d;
     String txt_n; //晚上天气
     String code_n;
+    String day;
+
+    public String getDay() {
+        return day;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
 
     public String getMax() {
         return max;

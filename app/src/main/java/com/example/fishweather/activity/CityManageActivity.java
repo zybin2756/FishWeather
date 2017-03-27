@@ -1,5 +1,6 @@
 package com.example.fishweather.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.fishweather.db.UserCity;
 import com.example.fishweather.db.dbManage;
@@ -28,6 +30,8 @@ import java.util.List;
 
 import com.example.fishweather.itemTouch.OnStartDragListener;
 import com.example.fishweather.util.Constants;
+import com.example.fishweather.util.HttpUtil;
+import com.example.fishweather.util.ParseUtil;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
@@ -50,8 +54,10 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     private RecyclerView city_recyclerView;
     private CityManageAdapter cityManageAdapter;
     private ItemTouchHelper itemTouchHelper;
-
+    private RelativeLayout rrl_refresh;
+    private Toolbar toolbar;
     private List<UserCity> cityList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +88,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initView(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.city_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.city_toolbar);
         setSupportActionBar(toolbar);
 
         actionBar = getSupportActionBar();
@@ -100,6 +106,8 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
 
         btn_add_city = (ImageButton) ll_add_city.findViewById(R.id.btn_add_city);
         btn_add_city.setOnClickListener(this);
+
+        rrl_refresh = (RelativeLayout) findViewById(R.id.rrl_refresh);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -140,7 +148,23 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
             case Constants.SEARCH_CITY: {
                 if (Constants.SEARCH_CITY_ADD == resultCode) {
                     setResult(Constants.MANAGE_CITY_REFRESH);
-                    finish();
+                    rrl_refresh.setVisibility(View.VISIBLE);
+                    city_recyclerView.setVisibility(View.GONE);
+                    ll_add_city.setVisibility(View.GONE);
+                    toolbar.setVisibility(View.GONE);
+                    HttpUtil.loadWeatherInfo(data.getStringExtra("city_code"), new HttpUtil.HttpCallBack() {
+                        @Override
+                        public void onError(String msg) {
+
+                        }
+
+                        @Override
+                        public void onFinish(String data) {
+                            ParseUtil.parseWeather(data);
+                            finish();
+                        }
+                    });
+
                 } else if (Constants.SEARCH_CITY_UNADD == resultCode) {
 
                 }

@@ -9,4 +9,7 @@
     <string name="action_edit">编辑</string>
     <string name="action_add_city">添加城市</string>
     <string name="txt_select_hint">已选择</string>
+    <string name="search_hint">请输入城市名</string>
+    <string name="txt_hum">相对湿度</string>
+    <string name="txt_aqi">空气质量</string>
 </resources>

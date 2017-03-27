@@ -43,19 +43,8 @@ public class HttpUtil {
         public void onFinish(String data);
     }
 
-    public static void  loadWeatherInfo(String cityCode){
+    public static void  loadWeatherInfo(String cityCode,HttpUtil.HttpCallBack callBack){
         String path = "https://free-api.heweather.com/v5/weather?city="+cityCode+"&&key=65c50b6d014c4de3adf356741cbdd7d4";
-        HttpUtil.sendOkHttpRequest(path, new HttpUtil.HttpCallBack() {
-            @Override
-            public void onError(String msg) {
-                Toast.makeText(FishApplication.getContext(),"加载天气信息失败",Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFinish(String data) {
-                ParseUtil.parseWeather(data);
-            }
-
-        });
+        HttpUtil.sendOkHttpRequest(path,callBack);
     }
 }

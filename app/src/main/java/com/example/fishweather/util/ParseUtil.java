@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.example.fishweather.FishApplication;
 import com.example.fishweather.db.City;
+import com.example.fishweather.db.UserCity;
+import com.example.fishweather.db.dbManage;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +53,9 @@ public class ParseUtil {
 
             if(status.equals("ok")) {
                 String code = parseBasic(jsonObject.getJSONObject("basic"));
+                 UserCity city = dbManage.loadUserCity(code);
+                city.setUpdateTime(System.currentTimeMillis());
+                city.save();
                 parseNow(jsonObject.getJSONObject("now"), code);
                 parseDailyForecast(jsonObject.getJSONArray("daily_forecast"), code);
                 parseSuggestion(jsonObject.getJSONObject("suggestion"), code);
@@ -68,7 +73,7 @@ public class ParseUtil {
             SharedPreferences.Editor editor = sp.edit();
             JSONObject city = object.getJSONObject("city");
             editor.putString("qlty",city.getString("qlty"));
-            editor.putString("o3",city.getString("o3"));
+//            editor.putString("o3",city.getString("o3"));
             editor.putString("aqi",city.getString("aqi"));
             editor.commit();
         } catch (JSONException e) {
@@ -168,6 +173,10 @@ public class ParseUtil {
             editor.putString("dir",windObject.getString("dir")); //风向
             editor.putString("hum",nowObject.getString("hum")); //相对湿度
             editor.putString("tmp",nowObject.getString("tmp")); //温度
+
+            JSONObject condObject = nowObject.getJSONObject("cond");
+            editor.putString("txt",condObject.getString("txt"));
+            editor.putString("code",condObject.getString("code"));
             editor.commit();
         } catch (JSONException e) {
             e.printStackTrace();

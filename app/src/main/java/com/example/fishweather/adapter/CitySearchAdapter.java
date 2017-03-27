@@ -1,12 +1,12 @@
 package com.example.fishweather.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.fishweather.R;
 import com.example.fishweather.activity.CitySearchActivity;
@@ -62,9 +62,13 @@ public class CitySearchAdapter extends RecyclerView.Adapter<CitySearchAdapter.Vi
                 }else{
                     userCity.setCity_index(1);
                 }
+                userCity.setUpdateTime(System.currentTimeMillis());
+
                 userCity.saveIfNotExist("city_name = ?",city.getCity_name());
+                Intent intent = new Intent();
+                intent.putExtra("city_code",city.getCity_code());
                 CitySearchActivity activity = (CitySearchActivity) CitySearchAdapter.context;
-                activity.setResult(Constants.SEARCH_CITY_ADD);
+                activity.setResult(Constants.SEARCH_CITY_ADD,intent);
                 activity.finish();
                 context = null;
             }

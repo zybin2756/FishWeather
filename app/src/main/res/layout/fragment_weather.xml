@@ -1,99 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
-    <RelativeLayout
-        android:id="@+id/now_weather"
-        android:background="@mipmap/sunshine"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/now_temp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#000"
-            android:textSize="80sp"
-            android:text="24°"/>
-        <TextView
-            android:layout_below="@+id/now_temp"
-            android:layout_marginLeft="30dp"
-            android:id="@+id/now_city_and_code"
-            android:text="广州 | 晴"
-            android:textColor="#000"
-            android:textSize="22sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
-        <LinearLayout
-            android:layout_alignParentBottom="true"
+<android.support.v4.widget.SwipeRefreshLayout xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/weatherinfo_swip"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+        <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false">
-            <LinearLayout
-                android:gravity="center"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/now_dir"
-                    android:text="北风"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/now_spd"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:text="5级"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:gravity="center"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:id="@+id/tmp"
-                    android:text="相对湿度"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/now_hum"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:text="5级"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-            <LinearLayout
-                android:gravity="center"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-                <TextView
-                    android:text="空气质量"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <TextView
-                    android:id="@+id/now_qlty"
-                    android:textSize="20sp"
-                    android:textColor="#000"
-                    android:text="58"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
-</RelativeLayout>
+            android:layout_height="match_parent"
+            android:fillViewport="false">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                        <RelativeLayout
+                            android:id="@+id/now_weather"
+                            android:background="@mipmap/p100"
+                            android:layout_width="match_parent"
+                            android:layout_height="400dp">
+                            <TextView
+                                android:id="@+id/now_temp"
+                                android:layout_marginLeft="30dp"
+                                android:layout_marginTop="30dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#000"
+                                android:textSize="80sp"
+                                android:text="24°"
+                                tools:ignore="HardcodedText" />
+                            <TextView
+                                android:layout_below="@+id/now_temp"
+                                android:layout_marginLeft="30dp"
+                                android:id="@+id/now_city_and_code"
+                                android:text="广州 | 晴"
+                                android:textColor="#000"
+                                android:textSize="22sp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                tools:ignore="HardcodedText" />
+                            <LinearLayout
+                                android:layout_alignParentBottom="true"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:baselineAligned="false">
+                                <LinearLayout
+                                    android:gravity="center"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:id="@+id/now_dir"
+                                        android:text="北风"
+                                        android:textSize="20sp"
+                                        android:textColor="#000"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        tools:ignore="HardcodedText" />
+                                    <TextView
+                                        android:id="@+id/now_spd"
+                                        android:textSize="20sp"
+                                        android:textColor="#000"
+                                        android:text="5级"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        tools:ignore="HardcodedText" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:gravity="center"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:id="@+id/tmp"
+                                        android:text="@string/txt_hum"
+                                        android:textSize="20sp"
+                                        android:textColor="#000"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content" />
+                                    <TextView
+                                        android:id="@+id/now_hum"
+                                        android:textSize="20sp"
+                                        android:textColor="#000"
+                                        android:text="5级"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        tools:ignore="HardcodedText" />
+                                </LinearLayout>
+                                <LinearLayout
+                                    android:gravity="center"
+                                    android:layout_weight="1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+                                    <TextView
+                                        android:text="@string/txt_aqi"
+                                        android:textSize="20sp"
+                                        android:textColor="#000"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content" />
+                                    <TextView
+                                        android:id="@+id/now_qlty"
+                                        android:textSize="20sp"
+                                        android:textColor="#000"
+                                        android:text="58"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        tools:ignore="HardcodedText" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </RelativeLayout>
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/daily_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </android.support.v7.widget.RecyclerView>
+                </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+</android.support.v4.widget.SwipeRefreshLayout>

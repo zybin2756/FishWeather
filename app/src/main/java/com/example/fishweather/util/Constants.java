@@ -15,6 +15,8 @@ public class Constants {
     public static final int MANAGE_CITY = 6;
     public static final int MANAGE_CITY_REFRESH = 7;
 
+    public static final int WEATHER_REFRESH = 8;
+
     public static final String DATABASE_PATH = "/data/data/com.example.fishweather/databases";
     public static final String DATABASE_NAME = "FishWeather.db";
     public static final String DATABASE_FILEPATH = DATABASE_PATH+"/"+DATABASE_NAME;
