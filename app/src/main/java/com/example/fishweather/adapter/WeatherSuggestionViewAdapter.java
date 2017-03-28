@@ -41,7 +41,7 @@ public class WeatherSuggestionViewAdapter extends RecyclerView.Adapter<WeatherSu
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         SuggestionModel model = list.get(position);
-        holder.suggest_brf.setText(model.getTitle()+" - "+model.getBrf());
+        holder.suggest_brf.setText(model.getTitle());
         holder.suggest_txt.setText(model.getTxt());
 
         String code = model.getCode();

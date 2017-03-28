@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
@@ -131,9 +132,9 @@ public class WeatherFragment extends Fragment{
         dailyViewAdapteradapter = new WeatherDailyViewAdapter();
         daily_view.setAdapter(dailyViewAdapteradapter);
 
-        LinearLayoutManager slayoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),1);
         suggestion_view = (RecyclerView) view.findViewById(R.id.suggestion_view);
-        suggestion_view.setLayoutManager(slayoutManager);
+        suggestion_view.setLayoutManager(gridLayoutManager);
         suggestionViewAdapter = new WeatherSuggestionViewAdapter();
         suggestion_view.setAdapter(suggestionViewAdapter);
 
