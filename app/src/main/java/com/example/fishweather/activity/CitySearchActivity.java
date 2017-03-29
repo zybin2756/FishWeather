@@ -12,11 +12,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.example.fishweather.Constants;
 import com.example.fishweather.R;
 import com.example.fishweather.adapter.CitySearchAdapter;
 import com.example.fishweather.db.City;
@@ -98,4 +100,15 @@ public class CitySearchActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+
+        return  true;
+    }
 }
