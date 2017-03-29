@@ -68,9 +68,10 @@ public class CitySearchAdapter extends RecyclerView.Adapter<CitySearchAdapter.Vi
                 Intent intent = new Intent();
                 intent.putExtra("city_code",city.getCity_code());
                 CitySearchActivity activity = (CitySearchActivity) CitySearchAdapter.context;
+                context = null;
                 activity.setResult(Constants.SEARCH_CITY_ADD,intent);
                 activity.finish();
-                context = null;
+
             }
         });
         return holder;

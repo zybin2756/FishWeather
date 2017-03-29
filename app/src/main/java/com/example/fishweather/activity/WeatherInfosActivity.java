@@ -3,19 +3,26 @@ package com.example.fishweather.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
 
+import com.example.fishweather.Constants;
 import com.example.fishweather.R;
+import com.example.fishweather.adapter.DrawerCityListAdapter;
 import com.example.fishweather.adapter.WeaterFragmentAdapter;
 import com.example.fishweather.db.UserCity;
 import com.example.fishweather.db.dbManage;
-import com.example.fishweather.Constants;
+import com.example.fishweather.itemTouch.DividerItemDecoration;
 import com.example.fishweather.util.mPageTransformer;
 
 import java.util.List;
@@ -29,6 +36,11 @@ public class WeatherInfosActivity extends AppCompatActivity {
 //    private List<WeatherFragment> fragmentList = new ArrayList<>();
     private WeaterFragmentAdapter weaterFragmentAdapter;
     private ViewPager weatherInfoView;
+    private DrawerLayout drawer;
+    private ActionBar actionBar;
+    private RecyclerView drawer_citylist;
+    private DrawerCityListAdapter drawerCityListAdapter;
+
     public static void  actionStart(Context context){
         Intent intent = new Intent(context,WeatherInfosActivity.class);
         context.startActivity(intent);
@@ -43,26 +55,32 @@ public class WeatherInfosActivity extends AppCompatActivity {
         weaterFragmentAdapter = new WeaterFragmentAdapter(getSupportFragmentManager());
         weatherInfoView.setAdapter(weaterFragmentAdapter);
         weatherInfoView.setPageTransformer(true,new mPageTransformer());
+
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        drawer_citylist = (RecyclerView) findViewById(R.id.drawer_citylist);
+        drawer_citylist.setLayoutManager(layoutManager);
+        drawer_citylist.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
+        drawerCityListAdapter = new DrawerCityListAdapter(weatherInfoView,drawer);
+        drawer_citylist.setAdapter(drawerCityListAdapter);
+
         refreshData();
     }
 
     private void refreshData(){
-
-
-//        fragmentList.clear();
         List<UserCity> userCityList = dbManage.loadUserCity();
-//        for(int i = 0; i < userCityList.size(); i++){
-//            fragmentList.add(WeatherFragment.newInstance(userCityList.get(i).getCity_code()));
-//        }
-//        weaterFragmentAdapter.notifyDataSetChanged();
+
         weaterFragmentAdapter.setData(userCityList);
+        drawerCityListAdapter.setUserCityList(userCityList);
+
 
     }
     private void initToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         if(actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
@@ -79,7 +97,13 @@ public class WeatherInfosActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                Toast.makeText(this, "我准备用来显示城市列表的", Toast.LENGTH_SHORT).show();
+                if(drawer.isDrawerOpen(GravityCompat.START)) {
+                    drawer.closeDrawers();
+                    actionBar.setHomeAsUpIndicator(R.mipmap.ic_menu);
+                }else{
+                    drawer.openDrawer(GravityCompat.START);
+                    actionBar.setHomeAsUpIndicator(R.mipmap.leftarrow);
+                }
                 break;
             case R.id.action_changeCity:
                 Intent intent = new Intent(this,CityManageActivity.class);
@@ -104,6 +128,16 @@ public class WeatherInfosActivity extends AppCompatActivity {
                 }
                 break;
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(drawer.isDrawerOpen(GravityCompat.START)){
+            drawer.closeDrawers();
+        }
+        else{
+            super.onBackPressed();
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.fishweather.util;
 
+import android.graphics.Color;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 
@@ -8,8 +9,8 @@ import android.view.View;
  */
 
 public class mPageTransformer implements ViewPager.PageTransformer {
-    private static final float MIN_SCALE = 0.85f;
-    private static final float MIN_ALPHA = 0.5f;
+    private static final float MIN_SCALE = 0.7f;
+    private static final float MIN_ALPHA = 0.6f;
     private static final float ROT_MAX = 20.0f;
     private float mRot;
     @Override
