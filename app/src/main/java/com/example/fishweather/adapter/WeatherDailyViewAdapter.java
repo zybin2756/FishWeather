@@ -9,12 +9,11 @@ import android.widget.TextView;
 
 import com.example.fishweather.FishApplication;
 import com.example.fishweather.R;
-import com.example.fishweather.util.DailyForecastModel;
+import com.example.fishweather.model.DailyForecastModel;
 import com.example.fishweather.util.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by Administrator on 2017/3/27 0027.

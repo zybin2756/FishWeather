@@ -5,46 +5,32 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.fishweather.FishApplication;
 import com.example.fishweather.R;
 import com.example.fishweather.adapter.WeatherDailyViewAdapter;
 import com.example.fishweather.adapter.WeatherSuggestionViewAdapter;
-import com.example.fishweather.db.UserCity;
-import com.example.fishweather.db.dbManage;
-import com.example.fishweather.itemTouch.DividerItemDecoration;
-import com.example.fishweather.util.Constants;
-import com.example.fishweather.util.DailyForecastModel;
+import com.example.fishweather.Constants;
+import com.example.fishweather.model.DailyForecastModel;
 import com.example.fishweather.util.HttpUtil;
 import com.example.fishweather.util.ParseUtil;
-import com.example.fishweather.util.SuggestionModel;
+import com.example.fishweather.model.SuggestionModel;
 import com.squareup.leakcanary.RefWatcher;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Administrator on 2017/3/23.
@@ -52,12 +38,13 @@ import java.util.Set;
 
 public class WeatherFragment extends Fragment{
 
+    public static boolean dataChange = false;
     public static WeatherFragment newInstance(String cityCode) {
         
         Bundle args = new Bundle();
         args.putString("cityCode",cityCode);
         WeatherFragment fragment = new WeatherFragment();
-        fragment.setArguments(args);
+        fragment.setCityCode(cityCode);
         return fragment;
     }
 
@@ -69,18 +56,24 @@ public class WeatherFragment extends Fragment{
     private TextView now_spd;
     private TextView now_hum;
     private TextView now_qlty;
+    private ImageView now_icon;
 
     private WeatherSuggestionViewAdapter suggestionViewAdapter;
     private RecyclerView suggestion_view;
     private WeatherDailyViewAdapter dailyViewAdapteradapter;
     private RecyclerView daily_view;
     private SwipeRefreshLayout weatherinfo_swip;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather,container,false);
-        Bundle args = getArguments();
-        this.cityCode = args.getString("cityCode");
+
 
 //        HttpUtil.loadWeatherInfo(this.cityCode);
         initView(view);
@@ -91,22 +84,29 @@ public class WeatherFragment extends Fragment{
 //        sp.getString("city",null);
 //        sp.getString("update",null);
 
-
-
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(dataChange) {
+            loadWeatherInfoFromSp();
+            dataChange = false;
+        }
     }
 
     public void initView(View view) {
         now_weather = (RelativeLayout) view.findViewById(R.id.now_weather);
         weatherinfo_swip = (SwipeRefreshLayout) view.findViewById(R.id.weatherinfo_swip);
-        now_weather.getBackground().setAlpha(180);
+        now_weather.getBackground().setAlpha(220);
         now_tmp = (TextView) now_weather.findViewById(R.id.now_temp);
         now_city_and_code = (TextView) now_weather.findViewById(R.id.now_city_and_code);
         now_dir = (TextView) now_weather.findViewById(R.id.now_dir);
         now_spd = (TextView) now_weather.findViewById(R.id.now_spd);
         now_hum = (TextView) now_weather.findViewById(R.id.now_hum);
         now_qlty = (TextView) now_weather.findViewById(R.id.now_qlty);
-
+        now_icon = (ImageView) now_weather.findViewById(R.id.now_icon);
         weatherinfo_swip.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         weatherinfo_swip.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -132,7 +132,7 @@ public class WeatherFragment extends Fragment{
         dailyViewAdapteradapter = new WeatherDailyViewAdapter();
         daily_view.setAdapter(dailyViewAdapteradapter);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),1);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
         suggestion_view = (RecyclerView) view.findViewById(R.id.suggestion_view);
         suggestion_view.setLayoutManager(gridLayoutManager);
         suggestionViewAdapter = new WeatherSuggestionViewAdapter();
@@ -143,6 +143,7 @@ public class WeatherFragment extends Fragment{
 
 
     public void loadWeatherInfoFromSp(){
+        if(cityCode == null) return;
         SharedPreferences sp = getActivity().getSharedPreferences(cityCode,Context.MODE_PRIVATE);
         now_tmp.setText(sp.getString("tmp","未获取")+"°");
         now_city_and_code.setText(sp.getString("city","未获取") + "|"+sp.getString("txt","未获取"));
@@ -153,7 +154,7 @@ public class WeatherFragment extends Fragment{
 
         String code = "p"+sp.getString("code","100");
         int resId = getResources().getIdentifier(code,"mipmap",getContext().getPackageName());
-        now_weather.setBackgroundResource(resId);
+        now_icon.setBackgroundResource(resId);
 
         DailyForecastModel day0 = (DailyForecastModel) ParseUtil.parseModel(sp.getString("day0",null));
         day0.setDay("今天");
@@ -163,9 +164,15 @@ public class WeatherFragment extends Fragment{
         day2.setDay("后天");
 
         List<DailyForecastModel> list = new ArrayList<>();
-        list.add(day0);
-        list.add(day1);
-        list.add(day2);
+        if(day0 != null) {
+            list.add(day0);
+        }
+        if(day1 != null) {
+            list.add(day1);
+        }
+        if(day2 != null) {
+            list.add(day2);
+        }
 
         dailyViewAdapteradapter.setList(list);
 
@@ -178,15 +185,30 @@ public class WeatherFragment extends Fragment{
         SuggestionModel sport = (SuggestionModel) ParseUtil.parseModel(sp.getString("sport",null));
         SuggestionModel cw = (SuggestionModel) ParseUtil.parseModel(sp.getString("cw",null));
         SuggestionModel air = (SuggestionModel) ParseUtil.parseModel(sp.getString("air",null));
-
-        slist.add(drsg);
-        slist.add(comf);
-        slist.add(uv);
-        slist.add(flu);
-        slist.add(trav);
-        slist.add(sport);
-        slist.add(cw);
-        slist.add(air);
+        if(drsg != null) {
+            slist.add(drsg);
+        }
+        if(cw != null) {
+            slist.add(cw);
+        }
+        if(sport != null) {
+            slist.add(sport);
+        }
+        if(trav != null) {
+            slist.add(trav);
+        }
+        if(flu != null) {
+            slist.add(flu);
+        }
+        if(uv != null) {
+            slist.add(uv);
+        }
+        if(comf != null) {
+            slist.add(comf);
+        }
+        if(air != null) {
+            slist.add(air);
+        }
         suggestionViewAdapter.setList(slist);
     };
 
@@ -208,5 +230,14 @@ public class WeatherFragment extends Fragment{
         FishApplication.fixInputMethodManagerLeak(getContext());
         RefWatcher watcher = FishApplication.getRefWatcher();
         watcher.watch(this);
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+        dataChange = true;
     }
 }

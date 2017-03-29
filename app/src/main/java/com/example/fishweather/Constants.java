@@ -1,4 +1,4 @@
-package com.example.fishweather.util;
+package com.example.fishweather;
 
 /**
  * Created by Administrator on 2017/3/20 0020.

@@ -3,12 +3,13 @@ package com.example.fishweather.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Base64;
-import android.util.Log;
 
 import com.example.fishweather.FishApplication;
 import com.example.fishweather.db.City;
 import com.example.fishweather.db.UserCity;
 import com.example.fishweather.db.dbManage;
+import com.example.fishweather.model.DailyForecastModel;
+import com.example.fishweather.model.SuggestionModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -53,7 +54,8 @@ public class ParseUtil {
 
             if(status.equals("ok")) {
                 String code = parseBasic(jsonObject.getJSONObject("basic"));
-                 UserCity city = dbManage.loadUserCity(code);
+                UserCity city = dbManage.loadUserCity(code);
+                if(city == null)  return false;
                 city.setUpdateTime(System.currentTimeMillis());
                 city.save();
                 parseNow(jsonObject.getJSONObject("now"), code);

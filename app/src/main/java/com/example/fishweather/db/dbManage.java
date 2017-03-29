@@ -1,10 +1,8 @@
 package com.example.fishweather.db;
 
-import android.util.Log;
-
 import com.example.fishweather.FishApplication;
 import com.example.fishweather.R;
-import com.example.fishweather.util.Constants;
+import com.example.fishweather.Constants;
 
 import org.litepal.crud.DataSupport;
 

@@ -13,12 +13,11 @@ import android.widget.Toast;
 
 import com.example.fishweather.R;
 import com.example.fishweather.adapter.WeaterFragmentAdapter;
-import com.example.fishweather.db.City;
 import com.example.fishweather.db.UserCity;
 import com.example.fishweather.db.dbManage;
-import com.example.fishweather.util.Constants;
+import com.example.fishweather.Constants;
+import com.example.fishweather.util.mPageTransformer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ import java.util.List;
 
 public class WeatherInfosActivity extends AppCompatActivity {
 
-    private List<WeatherFragment> fragmentList = new ArrayList<>();
+//    private List<WeatherFragment> fragmentList = new ArrayList<>();
     private WeaterFragmentAdapter weaterFragmentAdapter;
     private ViewPager weatherInfoView;
     public static void  actionStart(Context context){
@@ -39,18 +38,25 @@ public class WeatherInfosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
         initToolbar();
-        refreshData();
+
         weatherInfoView = (ViewPager) findViewById(R.id.weatherInfoView);
-        weaterFragmentAdapter = new WeaterFragmentAdapter(getSupportFragmentManager(),fragmentList);
+        weaterFragmentAdapter = new WeaterFragmentAdapter(getSupportFragmentManager());
         weatherInfoView.setAdapter(weaterFragmentAdapter);
+        weatherInfoView.setPageTransformer(true,new mPageTransformer());
+        refreshData();
     }
 
     private void refreshData(){
-        fragmentList.clear();
+
+
+//        fragmentList.clear();
         List<UserCity> userCityList = dbManage.loadUserCity();
-        for(int i = 0; i < userCityList.size(); i++){
-            fragmentList.add(WeatherFragment.newInstance(userCityList.get(i).getCity_code()));
-        }
+//        for(int i = 0; i < userCityList.size(); i++){
+//            fragmentList.add(WeatherFragment.newInstance(userCityList.get(i).getCity_code()));
+//        }
+//        weaterFragmentAdapter.notifyDataSetChanged();
+        weaterFragmentAdapter.setData(userCityList);
+
     }
     private void initToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

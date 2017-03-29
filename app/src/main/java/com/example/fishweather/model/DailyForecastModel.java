@@ -1,4 +1,4 @@
-package com.example.fishweather.util;
+package com.example.fishweather.model;
 
 import java.io.Serializable;
 

@@ -9,8 +9,7 @@ import android.widget.TextView;
 
 import com.example.fishweather.FishApplication;
 import com.example.fishweather.R;
-import com.example.fishweather.util.DailyForecastModel;
-import com.example.fishweather.util.SuggestionModel;
+import com.example.fishweather.model.SuggestionModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +40,14 @@ public class WeatherSuggestionViewAdapter extends RecyclerView.Adapter<WeatherSu
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         SuggestionModel model = list.get(position);
-        holder.suggest_brf.setText(model.getTitle());
-        holder.suggest_txt.setText(model.getTxt());
+        if(model != null) {
+            holder.suggest_brf.setText(model.getTitle());
+            holder.suggest_txt.setText("\u3000" + model.getTxt());
 
-        String code = model.getCode();
-        int resId = FishApplication.getContext().getResources().getIdentifier(code,"mipmap",FishApplication.getContext().getPackageName());
-        holder.suggest_icon.setImageResource(resId);
+            String code = model.getCode();
+            int resId = FishApplication.getContext().getResources().getIdentifier(code, "mipmap", FishApplication.getContext().getPackageName());
+            holder.suggest_icon.setImageResource(resId);
+        }
     }
 
     @Override

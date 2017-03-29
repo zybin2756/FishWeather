@@ -1,8 +1,6 @@
 package com.example.fishweather.activity;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -14,13 +12,9 @@ import com.example.fishweather.R;
 import com.example.fishweather.db.City;
 import com.example.fishweather.db.UserCity;
 import com.example.fishweather.db.dbManage;
-import com.example.fishweather.util.Constants;
+import com.example.fishweather.Constants;
 import com.example.fishweather.util.HttpUtil;
 import com.example.fishweather.util.ParseUtil;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
-import com.google.android.gms.common.api.GoogleApiClient;
 
 import org.litepal.crud.DataSupport;
 

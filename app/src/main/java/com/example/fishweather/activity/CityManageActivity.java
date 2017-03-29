@@ -1,9 +1,7 @@
 package com.example.fishweather.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,12 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.fishweather.itemTouch.OnStartDragListener;
-import com.example.fishweather.util.Constants;
+import com.example.fishweather.Constants;
 import com.example.fishweather.util.HttpUtil;
 import com.example.fishweather.util.ParseUtil;
-
-import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
 
 /**
  * Created by Administrator on 2017/3/21 0021.
@@ -58,6 +53,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     private Toolbar toolbar;
     private List<UserCity> cityList;
 
+    private boolean isModify = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,11 +109,28 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case android.R.id.home:
+                if(isModify){
+                    setResult(Constants.MANAGE_CITY_REFRESH);
+                }
                 finish();
                 break;
         }
 
         return  true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(cityManageAdapter.isModify()) {
+            action_cancel.callOnClick();
+            return;
+        }
+        else {
+            if (isModify) {
+                setResult(Constants.MANAGE_CITY_REFRESH);
+            }
+            finish();
+        }
     }
 
     @Override
@@ -128,6 +141,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
                     enterModify(true);
                 }else{
                     dbManage.saveUserCity(cityList);
+                    isModify = true;
                     enterModify(false);
                 }
                 break;

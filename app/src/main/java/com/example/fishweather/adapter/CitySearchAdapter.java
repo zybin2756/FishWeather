@@ -13,7 +13,7 @@ import com.example.fishweather.activity.CitySearchActivity;
 import com.example.fishweather.db.City;
 import com.example.fishweather.db.UserCity;
 import com.example.fishweather.db.dbManage;
-import com.example.fishweather.util.Constants;
+import com.example.fishweather.Constants;
 
 import org.litepal.crud.DataSupport;
 
