@@ -16,20 +16,19 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.example.fishweather.Constants;
+import com.example.fishweather.R;
+import com.example.fishweather.adapter.CityManageAdapter;
 import com.example.fishweather.db.UserCity;
 import com.example.fishweather.db.dbManage;
 import com.example.fishweather.itemTouch.DividerItemDecoration;
-import com.example.fishweather.R;
-import com.example.fishweather.adapter.CityManageAdapter;
+import com.example.fishweather.itemTouch.OnStartDragListener;
 import com.example.fishweather.itemTouch.myItemTouchHelperCallback;
+import com.example.fishweather.util.HttpUtil;
+import com.example.fishweather.util.ParseUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.example.fishweather.itemTouch.OnStartDragListener;
-import com.example.fishweather.Constants;
-import com.example.fishweather.util.HttpUtil;
-import com.example.fishweather.util.ParseUtil;
 
 /**
  * Created by Administrator on 2017/3/21 0021.

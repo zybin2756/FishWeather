@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,9 @@ import java.util.List;
 
 public class WeatherFragment extends Fragment{
 
+    public static int count = 0;
     public static boolean dataChange = false;
+
     public static WeatherFragment newInstance(String cityCode) {
         
         Bundle args = new Bundle();
@@ -73,17 +76,8 @@ public class WeatherFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_weather,container,false);
-
-
-//        HttpUtil.loadWeatherInfo(this.cityCode);
         initView(view);
-
-        loadWeatherInfoFromSp();
-//        sp.getString("o3",null);
-//        sp.getString("aqi",null);
-//        sp.getString("city",null);
-//        sp.getString("update",null);
-
+        preLoadWeatherInfo();
         return view;
     }
 
@@ -91,7 +85,7 @@ public class WeatherFragment extends Fragment{
     public void onResume() {
         super.onResume();
         if(dataChange) {
-            loadWeatherInfoFromSp();
+            preLoadWeatherInfo();
             dataChange = false;
         }
     }
@@ -127,23 +121,50 @@ public class WeatherFragment extends Fragment{
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        layoutManager.setSmoothScrollbarEnabled(true);
+        layoutManager.setAutoMeasureEnabled(true);
         daily_view = (RecyclerView) view.findViewById(R.id.daily_view);
         daily_view.setLayoutManager(layoutManager);
+        daily_view.setHasFixedSize(true);
+        daily_view.setNestedScrollingEnabled(false);
         dailyViewAdapteradapter = new WeatherDailyViewAdapter();
         daily_view.setAdapter(dailyViewAdapteradapter);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
+        gridLayoutManager.setSmoothScrollbarEnabled(true);
+        gridLayoutManager.setAutoMeasureEnabled(true);
         suggestion_view = (RecyclerView) view.findViewById(R.id.suggestion_view);
         suggestion_view.setLayoutManager(gridLayoutManager);
+        suggestion_view.setHasFixedSize(true);
+        suggestion_view.setNestedScrollingEnabled(false);
         suggestionViewAdapter = new WeatherSuggestionViewAdapter();
         suggestion_view.setAdapter(suggestionViewAdapter);
 
     }
 
+    public void preLoadWeatherInfo(){
+        SharedPreferences sp = getActivity().getSharedPreferences(cityCode,Context.MODE_PRIVATE);
+        if(!sp.getBoolean("isUpdate",false)){
+            HttpUtil.loadWeatherInfo(cityCode, new HttpUtil.HttpCallBack() {
+                @Override
+                public void onError(String msg) {
 
+                }
 
-    public void loadWeatherInfoFromSp(){
+                @Override
+                public void onFinish(String data) {
+                    ParseUtil.parseWeather(data);
+                    preLoadWeatherInfo();
+                }
+            });
+            return;
+        }
+        handler.sendEmptyMessage(Constants.WEATHER_REFRESH);
+    }
+
+    private void loadWeatherInfoFromSp(){
         if(cityCode == null) return;
+        Log.i("zyb","第"+(++count)+"次进入");
         SharedPreferences sp = getActivity().getSharedPreferences(cityCode,Context.MODE_PRIVATE);
         now_tmp.setText(sp.getString("tmp","未获取")+"°");
         now_city_and_code.setText(sp.getString("city","未获取") + "|"+sp.getString("txt","未获取"));
@@ -157,20 +178,20 @@ public class WeatherFragment extends Fragment{
         now_icon.setBackgroundResource(resId);
 
         DailyForecastModel day0 = (DailyForecastModel) ParseUtil.parseModel(sp.getString("day0",null));
-        day0.setDay("今天");
         DailyForecastModel day1 = (DailyForecastModel) ParseUtil.parseModel(sp.getString("day1",null));
-        day1.setDay("明天");
         DailyForecastModel day2 = (DailyForecastModel) ParseUtil.parseModel(sp.getString("day2",null));
-        day2.setDay("后天");
 
         List<DailyForecastModel> list = new ArrayList<>();
         if(day0 != null) {
+            day0.setDay("今天");
             list.add(day0);
         }
         if(day1 != null) {
+            day1.setDay("明天");
             list.add(day1);
         }
         if(day2 != null) {
+            day2.setDay("后天");
             list.add(day2);
         }
 
@@ -218,7 +239,9 @@ public class WeatherFragment extends Fragment{
             switch (msg.what) {
                 case Constants.WEATHER_REFRESH:
                     loadWeatherInfoFromSp();
-                    weatherinfo_swip.setRefreshing(false);
+                    if(weatherinfo_swip.isRefreshing()) {
+                        weatherinfo_swip.setRefreshing(false);
+                    }
                     break;
             }
         }

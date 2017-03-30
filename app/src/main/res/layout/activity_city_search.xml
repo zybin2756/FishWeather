@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:contentInsetStart="0dp"
         app:contentInsetLeft="0dp">
         <EditText
@@ -16,6 +17,8 @@
             android:background="@drawable/btn_corner"
             android:layout_margin="10dp"
             android:drawablePadding="20dp"
+            android:textColorHint="#ccc"
+            android:textColor="#000"
             android:hint="@string/search_hint"
             android:inputType="text"
             android:imeOptions="actionSearch"

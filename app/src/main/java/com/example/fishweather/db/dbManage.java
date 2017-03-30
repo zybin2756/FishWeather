@@ -31,26 +31,7 @@ public class dbManage {
         return DataSupport.isExist(UserCity.class,"city_name=?",cityName);
     }
 
-    public static void saveUserCity(List<UserCity> cityList){
 
-        if(cityList.size() >0) {
-            UserCity city;
-            StringBuilder limit = new StringBuilder("(");
-            for (int i = 0; i < cityList.size(); i++) {
-                city = cityList.get(i);
-                city.setCity_index(i + 1);
-                city.save();
-                limit.append("'" + city.getCity_name() + "',");
-            }
-            limit.deleteCharAt(limit.length() - 1);
-            limit.append(")");
-            //        Log.i("zyb",limit.toString());
-            DataSupport.deleteAll(UserCity.class, "city_name not in " + limit.toString());
-        }
-        else{
-            DataSupport.deleteAll(UserCity.class);
-        }
-    }
     public static List<UserCity> loadUserCity(){
         return DataSupport.order("city_index asc").find(UserCity.class);
     }
@@ -102,5 +83,44 @@ public class dbManage {
             cityList = DataSupport.where("city_name like ?", "%" + cityName + "%").find(City.class);
         }
         return cityList;
+    }
+
+    public static void saveUserCity(City city,int index){
+        UserCity userCity = new UserCity();
+        userCity.setCity_name(city.getCity_name());
+        userCity.setCity_code(city.getCity_code());
+        userCity.setCity_index(index);
+        userCity.setUpdateTime(System.currentTimeMillis());
+        userCity.saveIfNotExist("city_name = ?",city.getCity_name());
+    }
+
+    public static void saveUserCity(City city){
+        UserCity last = DataSupport.findLast(UserCity.class);
+        int index = 1;
+        if(last != null){
+            index = last.getCity_index()+1;
+        }
+        saveUserCity(city,index);
+    }
+
+    public static void saveUserCity(List<UserCity> cityList){
+
+        if(cityList.size() >0) {
+            UserCity city;
+            StringBuilder limit = new StringBuilder("(");
+            for (int i = 0; i < cityList.size(); i++) {
+                city = cityList.get(i);
+                city.setCity_index(i + 1);
+                city.save();
+                limit.append("'" + city.getCity_name() + "',");
+            }
+            limit.deleteCharAt(limit.length() - 1);
+            limit.append(")");
+            //        Log.i("zyb",limit.toString());
+            DataSupport.deleteAll(UserCity.class, "city_name not in " + limit.toString());
+        }
+        else{
+            DataSupport.deleteAll(UserCity.class);
+        }
     }
 }

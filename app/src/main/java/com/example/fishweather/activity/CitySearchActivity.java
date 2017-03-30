@@ -60,9 +60,19 @@ public class CitySearchActivity extends AppCompatActivity {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         search_recyclerView.setLayoutManager(layoutManager);
         search_recyclerView.addItemDecoration(new DividerItemDecoration(this,DividerItemDecoration.VERTICAL_LIST));
-        adapter = new CitySearchAdapter(CitySearchActivity.this);
+        adapter = new CitySearchAdapter(new CitySearchAdapter.closeListener(){
+            @Override
+            public void onFinish(String code) {
+                Intent intent = new Intent();
+                intent.putExtra("city_code",code);
+                setResult(Constants.SEARCH_CITY_ADD,intent);
+                finish();
+            }
+        });
         search_recyclerView.setAdapter(adapter);
     }
+
+
 
     public void initEdtSearch(){
         edt_search = (EditText) toolbar.findViewById(R.id.edt_search);

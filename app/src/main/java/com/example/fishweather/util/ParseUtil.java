@@ -169,7 +169,11 @@ public class ParseUtil {
             SharedPreferences sp = FishApplication.getContext().getSharedPreferences(code,Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sp.edit();
 
+
+
             JSONObject windObject = nowObject.getJSONObject("wind");
+
+            editor.putBoolean("isUpdate",true);
 
             editor.putString("spd",windObject.getString("spd")); //风力等级
             editor.putString("dir",windObject.getString("dir")); //风向

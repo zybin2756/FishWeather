@@ -1,9 +1,14 @@
 package com.example.fishweather.activity;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.accessibility.AccessibilityManagerCompat;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -18,6 +23,7 @@ import com.example.fishweather.util.ParseUtil;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,9 +38,12 @@ public class SplashActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
         progressBar = (RelativeLayout) findViewById(R.id.progressBar);
         copyOrCreateDataBase();
     }
+
+
 
     Handler mHandler = new Handler() {
         @Override

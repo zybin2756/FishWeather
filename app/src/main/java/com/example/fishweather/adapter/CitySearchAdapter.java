@@ -26,10 +26,11 @@ import java.util.List;
 
 public class CitySearchAdapter extends RecyclerView.Adapter<CitySearchAdapter.ViewHolder>{
     List<City> cityList = new ArrayList<>();
-    public static Context context;
-    public CitySearchAdapter(Context context) {
+
+    closeListener listener;
+    public CitySearchAdapter(closeListener listener) {
         super();
-        this.context = context;
+        this.listener = listener;
     }
 
     public void setCityList(List<City> cityList) {
@@ -52,25 +53,9 @@ public class CitySearchAdapter extends RecyclerView.Adapter<CitySearchAdapter.Vi
                 int pos = holder.getAdapterPosition();
                 City city = cityList.get(pos);
 
-                UserCity last = DataSupport.findLast(UserCity.class);
+                dbManage.saveUserCity(city);
 
-                UserCity userCity = new UserCity();
-                userCity.setCity_name(city.getCity_name());
-                userCity.setCity_code(city.getCity_code());
-                if(last != null){
-                    userCity.setCity_index(last.getCity_index()+1);
-                }else{
-                    userCity.setCity_index(1);
-                }
-                userCity.setUpdateTime(System.currentTimeMillis());
-
-                userCity.saveIfNotExist("city_name = ?",city.getCity_name());
-                Intent intent = new Intent();
-                intent.putExtra("city_code",city.getCity_code());
-                CitySearchActivity activity = (CitySearchActivity) CitySearchAdapter.context;
-                context = null;
-                activity.setResult(Constants.SEARCH_CITY_ADD,intent);
-                activity.finish();
+                listener.onFinish(city.getCity_code());
 
             }
         });
@@ -101,5 +86,9 @@ public class CitySearchAdapter extends RecyclerView.Adapter<CitySearchAdapter.Vi
             cityName = (TextView) itemView.findViewById(R.id.item_city_name);
             hint = (TextView) itemView.findViewById(R.id.item_select_hint);
         }
+    }
+
+    public interface closeListener{
+        void onFinish(String code);
     }
 }
