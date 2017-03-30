@@ -1,5 +1,6 @@
 package com.example.fishweather.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -39,17 +40,21 @@ import java.util.List;
 
 public class WeatherFragment extends Fragment{
 
-    public static int count = 0;
-    public static boolean dataChange = false;
+    List<DailyForecastModel> dailyForecastModelList = new ArrayList<>();
+    List<SuggestionModel> suggestionModelList = new ArrayList<>();
+    List<String> weatherDataList = new ArrayList<>();
 
+    public static int count = 0;
+    public  boolean dataChange = false;
+    private View view = null;
     public static WeatherFragment newInstance(String cityCode) {
-        
         Bundle args = new Bundle();
         args.putString("cityCode",cityCode);
         WeatherFragment fragment = new WeatherFragment();
         fragment.setCityCode(cityCode);
         return fragment;
     }
+
 
     private String cityCode;
     private RelativeLayout now_weather;
@@ -75,9 +80,13 @@ public class WeatherFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_weather,container,false);
-        initView(view);
-        preLoadWeatherInfo();
+
+        if(view == null) {
+            view = inflater.inflate(R.layout.fragment_weather, container, false);
+            initView(view);
+            preLoadWeatherInfo();
+            dataChange = false;
+        }
         return view;
     }
 
@@ -145,59 +154,76 @@ public class WeatherFragment extends Fragment{
     public void preLoadWeatherInfo(){
         SharedPreferences sp = getActivity().getSharedPreferences(cityCode,Context.MODE_PRIVATE);
         if(!sp.getBoolean("isUpdate",false)){
-            HttpUtil.loadWeatherInfo(cityCode, new HttpUtil.HttpCallBack() {
+            new Thread(new Runnable() {
                 @Override
-                public void onError(String msg) {
+                public void run() {
+                    HttpUtil.loadWeatherInfo(cityCode, new HttpUtil.HttpCallBack() {
+                        @Override
+                        public void onError(String msg) {
 
-                }
+                        }
 
-                @Override
-                public void onFinish(String data) {
-                    ParseUtil.parseWeather(data);
-                    preLoadWeatherInfo();
+                        @Override
+                        public void onFinish(String data) {
+                            ParseUtil.parseWeather(data);
+                            preLoadWeatherInfo();
+                        }
+                    });
                 }
-            });
-            return;
+            }).run();
+        }else{
+            handler.sendEmptyMessage(Constants.WEATHER_REFRESH);
         }
-        handler.sendEmptyMessage(Constants.WEATHER_REFRESH);
+
     }
+
 
     private void loadWeatherInfoFromSp(){
         if(cityCode == null) return;
+
+        suggestionModelList.clear();
+        dailyForecastModelList.clear();
+        weatherDataList.clear();
+
         Log.i("zyb","第"+(++count)+"次进入");
         SharedPreferences sp = getActivity().getSharedPreferences(cityCode,Context.MODE_PRIVATE);
-        now_tmp.setText(sp.getString("tmp","未获取")+"°");
-        now_city_and_code.setText(sp.getString("city","未获取") + "|"+sp.getString("txt","未获取"));
-        now_dir.setText(sp.getString("dir","未获取"));
-        now_spd.setText(sp.getString("spd","未获取")+"m/s");
-        now_hum.setText(sp.getString("hum","未获取")+"%");
-        now_qlty.setText(sp.getString("aqi","未获取"));
-
+        String tmp = sp.getString("tmp","未获取")+"°";
+        String city_and_code = sp.getString("city","未获取") + "|"+sp.getString("txt","未获取");
+        String dir = sp.getString("dir","未获取");
+        String spd = sp.getString("spd","未获取")+"m/s";
+        String hum = sp.getString("hum","未获取")+"%";
+        String qlty = sp.getString("aqi","未获取");
         String code = "p"+sp.getString("code","100");
-        int resId = getResources().getIdentifier(code,"mipmap",getContext().getPackageName());
-        now_icon.setBackgroundResource(resId);
+        weatherDataList.add(tmp);
+        weatherDataList.add(city_and_code);
+        weatherDataList.add(dir);
+        weatherDataList.add(spd);
+        weatherDataList.add(hum);
+        weatherDataList.add(qlty);
+        weatherDataList.add(code);
+
+
 
         DailyForecastModel day0 = (DailyForecastModel) ParseUtil.parseModel(sp.getString("day0",null));
         DailyForecastModel day1 = (DailyForecastModel) ParseUtil.parseModel(sp.getString("day1",null));
         DailyForecastModel day2 = (DailyForecastModel) ParseUtil.parseModel(sp.getString("day2",null));
 
-        List<DailyForecastModel> list = new ArrayList<>();
         if(day0 != null) {
             day0.setDay("今天");
-            list.add(day0);
+            dailyForecastModelList.add(day0);
         }
         if(day1 != null) {
             day1.setDay("明天");
-            list.add(day1);
+            dailyForecastModelList.add(day1);
         }
         if(day2 != null) {
             day2.setDay("后天");
-            list.add(day2);
+            dailyForecastModelList.add(day2);
         }
 
-        dailyViewAdapteradapter.setList(list);
+//        dailyViewAdapteradapter.setList(list);
 
-        List<SuggestionModel> slist = new ArrayList<>();
+
         SuggestionModel drsg = (SuggestionModel) ParseUtil.parseModel(sp.getString("drsg",null));
         SuggestionModel comf = (SuggestionModel) ParseUtil.parseModel(sp.getString("comf",null));
         SuggestionModel uv = (SuggestionModel) ParseUtil.parseModel(sp.getString("uv",null));
@@ -207,30 +233,31 @@ public class WeatherFragment extends Fragment{
         SuggestionModel cw = (SuggestionModel) ParseUtil.parseModel(sp.getString("cw",null));
         SuggestionModel air = (SuggestionModel) ParseUtil.parseModel(sp.getString("air",null));
         if(drsg != null) {
-            slist.add(drsg);
+            suggestionModelList.add(drsg);
         }
         if(cw != null) {
-            slist.add(cw);
+            suggestionModelList.add(cw);
         }
         if(sport != null) {
-            slist.add(sport);
+            suggestionModelList.add(sport);
         }
         if(trav != null) {
-            slist.add(trav);
+            suggestionModelList.add(trav);
         }
         if(flu != null) {
-            slist.add(flu);
+            suggestionModelList.add(flu);
         }
         if(uv != null) {
-            slist.add(uv);
+            suggestionModelList.add(uv);
         }
         if(comf != null) {
-            slist.add(comf);
+            suggestionModelList.add(comf);
         }
         if(air != null) {
-            slist.add(air);
+            suggestionModelList.add(air);
         }
-        suggestionViewAdapter.setList(slist);
+//        suggestionViewAdapter.setList(slist);
+        handler.sendEmptyMessage(Constants.WEATHER_REFRESHED);
     };
 
     Handler handler = new Handler(){
@@ -238,15 +265,34 @@ public class WeatherFragment extends Fragment{
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case Constants.WEATHER_REFRESH:
-                    loadWeatherInfoFromSp();
-                    if(weatherinfo_swip.isRefreshing()) {
-                        weatherinfo_swip.setRefreshing(false);
-                    }
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadWeatherInfoFromSp();
+                        }
+                    }).run();
+                    break;
+                case Constants.WEATHER_REFRESHED:
+                    showData();
+                    weatherinfo_swip.setRefreshing(false);
                     break;
             }
         }
     };
 
+    public  void showData(){
+        now_tmp.setText(weatherDataList.get(0));
+        now_city_and_code.setText(weatherDataList.get(1));
+        now_dir.setText(weatherDataList.get(2));
+        now_spd.setText(weatherDataList.get(3));
+        now_hum.setText(weatherDataList.get(4));
+        now_qlty.setText(weatherDataList.get(5));
+        int resId = getResources().getIdentifier(weatherDataList.get(6),"mipmap",getContext().getPackageName());
+        now_icon.setBackgroundResource(resId);
+
+        dailyViewAdapteradapter.setList(dailyForecastModelList);
+        suggestionViewAdapter.setList(suggestionModelList);
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -262,5 +308,6 @@ public class WeatherFragment extends Fragment{
     public void setCityCode(String cityCode) {
         this.cityCode = cityCode;
         dataChange = true;
+        view = null;
     }
 }

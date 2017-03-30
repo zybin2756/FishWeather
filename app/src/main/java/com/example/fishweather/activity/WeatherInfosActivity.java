@@ -135,7 +135,6 @@ public class WeatherInfosActivity extends AppCompatActivity {
 
     private void refreshData(){
         List<UserCity> userCityList = dbManage.loadUserCity();
-
         weaterFragmentAdapter.setData(userCityList);
         drawerCityListAdapter.setUserCityList(userCityList);
     }

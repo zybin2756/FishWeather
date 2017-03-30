@@ -36,13 +36,13 @@
                                 android:layout_height="wrap_content"
                                 android:textColor="#000"
                                 android:textSize="80sp"
-                                android:text="24°"
+                                android:text=""
                                 tools:ignore="HardcodedText" />
                             <TextView
                                 android:layout_below="@+id/now_temp"
                                 android:layout_marginLeft="30dp"
                                 android:id="@+id/now_city_and_code"
-                                android:text="广州 | 晴"
+                                android:text=""
                                 android:textColor="#000"
                                 android:textSize="22sp"
                                 android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
                                     android:orientation="vertical">
                                     <TextView
                                         android:id="@+id/now_dir"
-                                        android:text="北风"
+                                        android:text=""
                                         android:textSize="20sp"
                                         android:textColor="#000"
                                         android:layout_width="wrap_content"
@@ -71,7 +71,7 @@
                                         android:id="@+id/now_spd"
                                         android:textSize="20sp"
                                         android:textColor="#000"
-                                        android:text="5级"
+                                        android:text=""
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         tools:ignore="HardcodedText" />
@@ -93,7 +93,7 @@
                                         android:id="@+id/now_hum"
                                         android:textSize="20sp"
                                         android:textColor="#000"
-                                        android:text="5级"
+                                        android:text=""
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         tools:ignore="HardcodedText" />
@@ -114,7 +114,7 @@
                                         android:id="@+id/now_qlty"
                                         android:textSize="20sp"
                                         android:textColor="#000"
-                                        android:text="58"
+                                        android:text=""
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         tools:ignore="HardcodedText" />

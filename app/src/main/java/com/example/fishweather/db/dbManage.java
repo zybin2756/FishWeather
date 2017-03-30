@@ -104,7 +104,6 @@ public class dbManage {
     }
 
     public static void saveUserCity(List<UserCity> cityList){
-
         if(cityList.size() >0) {
             UserCity city;
             StringBuilder limit = new StringBuilder("(");

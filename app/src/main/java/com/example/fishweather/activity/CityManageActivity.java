@@ -139,6 +139,7 @@ public class CityManageActivity extends AppCompatActivity implements View.OnClic
                 if(!cityManageAdapter.isModify()) {
                     enterModify(true);
                 }else{
+
                     dbManage.saveUserCity(cityList);
                     isModify = true;
                     enterModify(false);

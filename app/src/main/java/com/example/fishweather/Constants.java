@@ -16,6 +16,7 @@ public class Constants {
     public static final int MANAGE_CITY_REFRESH = 7;
 
     public static final int WEATHER_REFRESH = 8;
+    public static final int WEATHER_REFRESHED = 9;
 
     public static final int REQUEST_PERMISSION = 9;
 
