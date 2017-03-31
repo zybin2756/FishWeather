@@ -17,7 +17,7 @@
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="正在刷新数据"/>
+            android:text="@string/txt_refresh"/>
     </RelativeLayout>
     <android.support.v7.widget.Toolbar
         android:id="@+id/city_toolbar"

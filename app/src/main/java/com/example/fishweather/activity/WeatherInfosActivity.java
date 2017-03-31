@@ -197,6 +197,7 @@ public class WeatherInfosActivity extends AppCompatActivity {
             case Constants.MANAGE_CITY: {
                 if (Constants.MANAGE_CITY_REFRESH == resultCode) {
                     refreshData();
+                    weatherInfoView.setCurrentItem(weaterFragmentAdapter.getCount()-1);
                 }
                 break;
             }

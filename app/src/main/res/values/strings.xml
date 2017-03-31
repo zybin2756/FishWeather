@@ -14,4 +14,5 @@
     <string name="txt_aqi">空气质量</string>
     <string name="txt_clik_tips">单击城市进行跳转</string>
     <string name="action_location">自动定位</string>
+    <string name="txt_refresh">正在刷新数据</string>
 </resources>

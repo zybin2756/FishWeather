@@ -3,6 +3,7 @@ package com.example.fishweather.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -75,6 +76,9 @@ public class WeatherFragment extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null && savedInstanceState.getString("cityCode") != null){
+            cityCode = savedInstanceState.getString("cityCode");
+        }
     }
 
     @Nullable
@@ -100,56 +104,18 @@ public class WeatherFragment extends Fragment{
         }
     }
 
-    public void initView(View view) {
-        now_weather = (RelativeLayout) view.findViewById(R.id.now_weather);
-        weatherinfo_swip = (SwipeRefreshLayout) view.findViewById(R.id.weatherinfo_swip);
-        now_weather.getBackground().setAlpha(220);
-        now_tmp = (TextView) now_weather.findViewById(R.id.now_temp);
-        now_city_and_code = (TextView) now_weather.findViewById(R.id.now_city_and_code);
-        now_dir = (TextView) now_weather.findViewById(R.id.now_dir);
-        now_spd = (TextView) now_weather.findViewById(R.id.now_spd);
-        now_hum = (TextView) now_weather.findViewById(R.id.now_hum);
-        now_qlty = (TextView) now_weather.findViewById(R.id.now_qlty);
-        now_icon = (ImageView) now_weather.findViewById(R.id.now_icon);
-        weatherinfo_swip.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
-        weatherinfo_swip.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                HttpUtil.loadWeatherInfo(cityCode, new HttpUtil.HttpCallBack() {
-                    @Override
-                    public void onError(String msg) {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        FishApplication.fixInputMethodManagerLeak(getContext());
+        RefWatcher watcher = FishApplication.getRefWatcher();
+        watcher.watch(this);
+    }
 
-                    }
-
-                    @Override
-                    public void onFinish(String data) {
-                        ParseUtil.parseWeather(data);
-                        handler.sendEmptyMessage(Constants.WEATHER_REFRESH);
-                    }
-                });
-            }
-        });
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
-        layoutManager.setSmoothScrollbarEnabled(true);
-        layoutManager.setAutoMeasureEnabled(true);
-        daily_view = (RecyclerView) view.findViewById(R.id.daily_view);
-        daily_view.setLayoutManager(layoutManager);
-        daily_view.setHasFixedSize(true);
-        daily_view.setNestedScrollingEnabled(false);
-        dailyViewAdapteradapter = new WeatherDailyViewAdapter();
-        daily_view.setAdapter(dailyViewAdapteradapter);
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
-        gridLayoutManager.setSmoothScrollbarEnabled(true);
-        gridLayoutManager.setAutoMeasureEnabled(true);
-        suggestion_view = (RecyclerView) view.findViewById(R.id.suggestion_view);
-        suggestion_view.setLayoutManager(gridLayoutManager);
-        suggestion_view.setHasFixedSize(true);
-        suggestion_view.setNestedScrollingEnabled(false);
-        suggestionViewAdapter = new WeatherSuggestionViewAdapter();
-        suggestion_view.setAdapter(suggestionViewAdapter);
-
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("cityCode",cityCode);
+        super.onSaveInstanceState(outState);
     }
 
     public void preLoadWeatherInfo(){
@@ -294,13 +260,59 @@ public class WeatherFragment extends Fragment{
         dailyViewAdapteradapter.setList(dailyForecastModelList);
         suggestionViewAdapter.setList(suggestionModelList);
     }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        FishApplication.fixInputMethodManagerLeak(getContext());
-        RefWatcher watcher = FishApplication.getRefWatcher();
-        watcher.watch(this);
+
+    public void initView(View view) {
+        now_weather = (RelativeLayout) view.findViewById(R.id.now_weather);
+        weatherinfo_swip = (SwipeRefreshLayout) view.findViewById(R.id.weatherinfo_swip);
+        now_weather.getBackground().setAlpha(220);
+        now_tmp = (TextView) now_weather.findViewById(R.id.now_temp);
+        now_city_and_code = (TextView) now_weather.findViewById(R.id.now_city_and_code);
+        now_dir = (TextView) now_weather.findViewById(R.id.now_dir);
+        now_spd = (TextView) now_weather.findViewById(R.id.now_spd);
+        now_hum = (TextView) now_weather.findViewById(R.id.now_hum);
+        now_qlty = (TextView) now_weather.findViewById(R.id.now_qlty);
+        now_icon = (ImageView) now_weather.findViewById(R.id.now_icon);
+        weatherinfo_swip.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
+        weatherinfo_swip.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                HttpUtil.loadWeatherInfo(cityCode, new HttpUtil.HttpCallBack() {
+                    @Override
+                    public void onError(String msg) {
+
+                    }
+
+                    @Override
+                    public void onFinish(String data) {
+                        ParseUtil.parseWeather(data);
+                        handler.sendEmptyMessage(Constants.WEATHER_REFRESH);
+                    }
+                });
+            }
+        });
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
+        layoutManager.setSmoothScrollbarEnabled(true);
+        layoutManager.setAutoMeasureEnabled(true);
+        daily_view = (RecyclerView) view.findViewById(R.id.daily_view);
+        daily_view.setLayoutManager(layoutManager);
+        daily_view.setHasFixedSize(true);
+        daily_view.setNestedScrollingEnabled(false);
+        dailyViewAdapteradapter = new WeatherDailyViewAdapter();
+        daily_view.setAdapter(dailyViewAdapteradapter);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),2);
+        gridLayoutManager.setSmoothScrollbarEnabled(true);
+        gridLayoutManager.setAutoMeasureEnabled(true);
+        suggestion_view = (RecyclerView) view.findViewById(R.id.suggestion_view);
+        suggestion_view.setLayoutManager(gridLayoutManager);
+        suggestion_view.setHasFixedSize(true);
+        suggestion_view.setNestedScrollingEnabled(false);
+        suggestionViewAdapter = new WeatherSuggestionViewAdapter();
+        suggestion_view.setAdapter(suggestionViewAdapter);
+
     }
+
 
     public String getCityCode() {
         return cityCode;
