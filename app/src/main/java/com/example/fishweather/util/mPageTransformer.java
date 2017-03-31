@@ -9,9 +9,9 @@ import android.view.View;
  */
 
 public class mPageTransformer implements ViewPager.PageTransformer {
-    private static final float MIN_SCALE = 0.7f;
+    private static final float MIN_SCALE = 0.5f;
     private static final float MIN_ALPHA = 0.6f;
-    private static final float ROT_MAX = 20.0f;
+    private static final float ROT_MAX = 180.0f;
     private float mRot;
     @Override
     public void transformPage(View view, float position) {
@@ -24,6 +24,7 @@ public class mPageTransformer implements ViewPager.PageTransformer {
             float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
             float vertMargin = pageHeight * (1 - scaleFactor) / 2;
             float horzMargin = pageWidth * (1 - scaleFactor) / 2;
+
             if (position < 0)
             {
                 view.setTranslationX(horzMargin - vertMargin / 2);
@@ -41,8 +42,8 @@ public class mPageTransformer implements ViewPager.PageTransformer {
                     / (1 - MIN_SCALE) * (1 - MIN_ALPHA));
 
             mRot = (ROT_MAX * position);
-            view.setPivotX(view.getMeasuredWidth() * 0.5f);
-            view.setPivotY(view.getMeasuredHeight());
+            view.setPivotX(view.getMeasuredWidth()  * 0.5f);
+            view.setPivotY(view.getMeasuredHeight() * 0.5f);
             view.setRotation(mRot);
 
         }else{

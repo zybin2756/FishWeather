@@ -197,7 +197,6 @@ public class WeatherInfosActivity extends AppCompatActivity {
             case Constants.MANAGE_CITY: {
                 if (Constants.MANAGE_CITY_REFRESH == resultCode) {
                     refreshData();
-                    weaterFragmentAdapter.notifyDataSetChanged();
                 }
                 break;
             }
@@ -286,7 +285,6 @@ public class WeatherInfosActivity extends AppCompatActivity {
                     break;
                 case Constants.LOCATION_CITY_REFRESH:
                     refreshData();
-                    weaterFragmentAdapter.notifyDataSetChanged();
                     weatherInfoView.setCurrentItem(0);
                     break;
             }

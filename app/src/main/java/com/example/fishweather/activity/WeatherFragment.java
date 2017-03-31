@@ -84,6 +84,7 @@ public class WeatherFragment extends Fragment{
         if(view == null) {
             view = inflater.inflate(R.layout.fragment_weather, container, false);
             initView(view);
+            weatherinfo_swip.setRefreshing(true);
             preLoadWeatherInfo();
             dataChange = false;
         }
@@ -170,7 +171,7 @@ public class WeatherFragment extends Fragment{
                         }
                     });
                 }
-            }).run();
+            }).start();
         }else{
             handler.sendEmptyMessage(Constants.WEATHER_REFRESH);
         }
@@ -270,7 +271,7 @@ public class WeatherFragment extends Fragment{
                         public void run() {
                             loadWeatherInfoFromSp();
                         }
-                    }).run();
+                    }).start();
                     break;
                 case Constants.WEATHER_REFRESHED:
                     showData();
