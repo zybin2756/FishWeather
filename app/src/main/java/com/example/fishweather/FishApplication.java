@@ -2,14 +2,20 @@ package com.example.fishweather;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.fishweather.db.UserCity;
+import com.example.fishweather.db.dbManage;
+import com.example.fishweather.service.WeatherService;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import org.litepal.LitePalApplication;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Administrator on 2017/3/19.
@@ -34,6 +40,8 @@ public class FishApplication extends Application {
         context = getApplicationContext();
         LitePalApplication.initialize(context);
         refWatcher = LeakCanary.install(this);
+        Intent intent = new Intent(this, WeatherService.class);
+        startService(intent);
     }
 
     public static void fixInputMethodManagerLeak(Context context) {

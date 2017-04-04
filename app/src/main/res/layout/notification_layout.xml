@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="80dp">
+    <ImageView
+        android:id="@id/icon"
+        android:src="@mipmap/des_logo"
+        android:layout_margin="15dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        tools:ignore="ContentDescription" />
+    <TextView
+        android:id="@+id/notification_city_name"
+        android:layout_centerVertical="true"
+        android:textSize="28sp"
+        android:layout_toRightOf="@+id/icon"
+        android:layout_toEndOf="@+id/icon"
+        android:text="广州"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="HardcodedText" />
+    <TextView
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:id="@+id/notification_tmp"
+        android:layout_centerVertical="true"
+        android:textSize="28sp"
+        android:layout_toRightOf="@+id/notification_city_name"
+        android:layout_toEndOf="@+id/notification_city_name"
+        android:text="16° / 24°"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="HardcodedText" />
+</RelativeLayout>

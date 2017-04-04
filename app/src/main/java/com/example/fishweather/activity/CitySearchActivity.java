@@ -31,7 +31,7 @@ import java.util.List;
  * Created by Administrator on 2017/3/22 0022.
  */
 
-public class CitySearchActivity extends AppCompatActivity {
+public class CitySearchActivity extends BaseActivity {
 
     private Toolbar toolbar;
     private EditText edt_search;

@@ -47,7 +47,7 @@ import java.util.List;
  * Created by Administrator on 2017/3/20 0020.
  */
 
-public class WeatherInfosActivity extends AppCompatActivity {
+public class WeatherInfosActivity extends BaseActivity {
 
     private boolean isLocating = false;
 //    private List<WeatherFragment> fragmentList = new ArrayList<>();

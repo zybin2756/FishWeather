@@ -34,7 +34,7 @@ import java.util.List;
  * Created by Administrator on 2017/3/21 0021.
  */
 
-public class CityManageActivity extends AppCompatActivity implements View.OnClickListener,OnStartDragListener{
+public class CityManageActivity extends BaseActivity implements View.OnClickListener,OnStartDragListener{
     public static void  actionStart(Context context){
         Intent intent = new Intent(context,CityManageActivity.class);
         context.startActivity(intent);
